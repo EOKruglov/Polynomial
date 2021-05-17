@@ -20,46 +20,51 @@ class Polynomial:
                                                                                              tuple, Polynomial))
 
     def __add_sub_pattern__(self, p2, op):
-        if not isinstance(p2, int) and not isinstance(p2, Polynomial):
-            raise TypeError('Unsupported operand type: {}!'.format(type(p2)))
-
         result = None
         operations_dict = {
             '+': lambda x, y: x + y,
             '-': lambda x, y: x - y
         }
-        if isinstance(p2, int):
-            result = self.coeffs.copy()
-            result[-1] = operations_dict[op](self.coeffs[-1], p2)
+        p1_reverse_coeffs = self.coeffs[::-1]
+        p2_reverse_coeffs = p2.coeffs[::-1]
+
+        if len(p1_reverse_coeffs) > len(p2_reverse_coeffs):
+            result = p1_reverse_coeffs
+            p2_reverse_coeffs += [0] * (len(p1_reverse_coeffs) - len(p2_reverse_coeffs))
         else:
-            p1_reverse_coeffs = self.coeffs[::-1]
-            p2_reverse_coeffs = p2.coeffs[::-1]
+            result = p2_reverse_coeffs
+            p1_reverse_coeffs += [0] * (len(p2_reverse_coeffs) - len(p1_reverse_coeffs))
 
-            if len(p1_reverse_coeffs) > len(p2_reverse_coeffs):
-                result = p1_reverse_coeffs
-                p2_reverse_coeffs += [0] * (len(p1_reverse_coeffs) - len(p2_reverse_coeffs))
-            else:
-                result = p2_reverse_coeffs
-                p1_reverse_coeffs += [0] * (len(p2_reverse_coeffs) - len(p1_reverse_coeffs))
+        for i in range(len(p1_reverse_coeffs)):
+            result[i] = operations_dict[op](p1_reverse_coeffs[i], p2_reverse_coeffs[i])
 
-            for i in range(len(p1_reverse_coeffs)):
-                result[i] = operations_dict[op](p1_reverse_coeffs[i], p2_reverse_coeffs[i])
-
-            result = result[::-1]
+        result = result[::-1]
 
         return Polynomial(result)
 
     def __add__(self, other):
+        if not isinstance(other, int) and not isinstance(other, Polynomial):
+            raise TypeError('Unsupported operand type: {}!'.format(type(other)))
+        if isinstance(other, int):
+            other = Polynomial(other)
         return self.__add_sub_pattern__(other, '+')
 
     def __radd__(self, other):
+        if not isinstance(other, int) and not isinstance(other, Polynomial):
+            raise TypeError('Unsupported operand type: {}!'.format(type(other)))
         other = Polynomial(other)
         return other.__add__(self)
 
     def __sub__(self, other):
+        if not isinstance(other, int) and not isinstance(other, Polynomial):
+            raise TypeError('Unsupported operand type: {}!'.format(type(other)))
+        if isinstance(other, int):
+            other = Polynomial(other)
         return self.__add_sub_pattern__(other, '-')
 
     def __rsub__(self, other):
+        if not isinstance(other, int) and not isinstance(other, Polynomial):
+            raise TypeError('Unsupported operand type: {}!'.format(type(other)))
         other = Polynomial(other)
         return other.__sub__(self)
 
@@ -84,6 +89,8 @@ class Polynomial:
         return Polynomial(result)
 
     def __rmul__(self, other):
+        if not isinstance(other, int) and not isinstance(other, Polynomial):
+            raise TypeError('Unsupported operand type: {}!'.format(type(other)))
         other = Polynomial(other)
         return other.__mul__(self)
 
