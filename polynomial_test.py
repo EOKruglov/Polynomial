@@ -97,6 +97,11 @@ class TestPolynomial(unittest.TestCase):
         ref_str = '-x^2+2x-3'
         self.assertEqual(str(p1), ref_str)
 
+    def test_negative_getattr_test(self):
+        p = Polynomial([1, 2, 3])
+        with self.assertRaises(AttributeError):
+            a = p.a
+
 
 if __name__ == "__main__":
     unittest.main()

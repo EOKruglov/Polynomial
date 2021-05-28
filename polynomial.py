@@ -19,6 +19,12 @@ class Polynomial:
             raise TypeError('Unsupported data type: {}! {}, {}, {}, {} are expected!'.format(type(args), int, list,
                                                                                              tuple, Polynomial))
 
+    def __getattr__(self, item):
+        if item == 'coeffs':
+            return self.coeffs
+        else:
+            raise AttributeError("{} object has no attribute {}".format(Polynomial, item))
+
     def __add_sub_pattern__(self, p2, op):
         result = None
         operations_dict = {
