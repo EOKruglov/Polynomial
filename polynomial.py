@@ -110,17 +110,33 @@ class Polynomial:
                 continue
             if i != 0 and i != 1:
                 if coeff == 1:
-                    result.append('x^{}'.format(i))
+                    result.append('+x^{}'.format(i))
+                elif coeff == -1:
+                    result.append('-x^{}'.format(i))
+                elif coeff > 1:
+                    result.append('+{}x^{}'.format(coeff, i))
                 else:
                     result.append('{}x^{}'.format(coeff, i))
             elif i == 1:
                 if coeff == 1:
-                    result.append('x^{}'.format(i))
+                    result.append('+x')
+                elif coeff == -1:
+                    result.append('-x')
+                elif coeff > 1:
+                    result.append('+{}x'.format(coeff))
                 else:
                     result.append('{}x'.format(coeff))
             else:
-                result.append('{}'.format(coeff))
-        return '+'.join(result[::-1])
+                if coeff > 0:
+                    result.append('+{}'.format(coeff))
+                else:
+                    result.append('{}'.format(coeff))
+
+        result_str = ''.join(result[::-1])
+        if result_str[0] == '+':
+            result_str = result_str[1:]
+        return result_str
+
 
     def __repr__(self):
         return 'Polynomial({})'.format(self.coeffs)
